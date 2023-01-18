@@ -1,60 +1,7 @@
 {
-    "SET":{
-        "M":{
-            "limit_data":10000
-        },
-        "CRC":{
-            "limit_data":10000
-        },
-        "HMPRO":{
-            "limit_data":10000
-        },
-        "TISCO":{
-            "limit_data":10000
-        },
-        "CPALL":{
-            "limit_data":10000
-        },
-        "KBANK":{
-            "limit_data":10000
-        },
-        "DELTA":{
-            "limit_data":10000
-        },
-        "AOT":{
-            "limit_data":10000
-        },
-        "BANPU":{
-            "limit_data":10000
-        },
-        "BDMS":{
-            "limit_data":10000
-        },
-        "ADVANC":{
-            "limit_data":10000
-        },
-        "PTTEP":{
-            "limit_data":10000 
-        },
-        "PTT":{
-            "limit_data":10000 
-        },
-        "COM7":{
-            "limit_data":10000
-        },
-        "TOP":{
-            "limit_data":10000
-        },
-        "SCB":{
-            "limit_data":10000
-        },
-        "THG":{
-            "limit_data":10000
-        }
-    },
-    "NASDAQ":{
-        "AAPL":{
-            "limit_data":10000
-        }
+    "list_stock":{
+        "SET":["M", "CRC", "HMPRO", "TISCO", "CPALL", "KBANK", "DELTA", "AOT",
+        "BANPU", "BDMS", "ADVANC", "PTTEP", "PTT", "COM7", "TOP", "SCB", "THG"],
+        "NASDAQ":["AAPL"]
     }
 }

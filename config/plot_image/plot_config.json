@@ -1,0 +1,6 @@
+{
+    "plot_config":{
+        "plot": false,
+        "n_bar": 60
+    }
+}
