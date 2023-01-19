@@ -15,8 +15,8 @@ def cross_ema(df, namest, **config):
 
     """
 
-    low_span = config['cross_ema']['low_span']
-    long_span = config['cross_ema']['long_span']
+    low_span = config['low_span']
+    long_span = config['long_span']
     # low_df = EMA(df['close'], low_span)
     # long_df = EMA(df['close'], long_span)
     df['low_df'] = EMA(df['close'], low_span)
@@ -29,7 +29,6 @@ def cross_ema(df, namest, **config):
 
     # logic buy and sell
     #     buy 100>200
-    print('test:',low_line[-1])
     if low_line[-1] > long_line[-1]:
         return 2, df #False
     #     sell 100<200
