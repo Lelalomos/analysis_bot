@@ -152,26 +152,19 @@ def pvt_with_divergence(df,short_length = 90, long_length = 95):
     return up, down, pvt_osc
 
 
-def normalize_list(nums):
-    min_val = np.min(nums)
-    max_val = np.max(nums)
-    return np.divide(np.subtract(nums, min_val), (max_val - min_val))
-
-
 def collect_mtfssl_pvtdiver(df, short_ema, long_ema):
     pvtup, pvtdown, pvt_osc = pvt_with_divergence(df, short_ema, long_ema)
     pvt_osc = pvt_osc[~np.isnan(pvt_osc)]
     pvtup = pvtup.dropna()
     pvtdown = pvtdown.dropna()
-    normailize_data = normalize_list(pvt_osc)
     sslup, ssldown = mtf_ssl(df)
     sslup = sslup.dropna()
     ssldown = ssldown.dropna()
     # buy
-    if sslup.to_list()[-1] > ssldown.to_list()[-1] and normailize_data[-1] > pvtup.to_list()[-1]:
+    if sslup.to_list()[-1] > ssldown.to_list()[-1] and pvt_osc[-1] > pvtup.to_list()[-1]:
         return 2 #False
     #     sell
-    elif sslup.to_list()[-1] < ssldown.to_list()[-1] and normailize_data[-1] < pvtdown.to_list()[-1]:
+    elif sslup.to_list()[-1] < ssldown.to_list()[-1] and pvt_osc[-1] < pvtdown.to_list()[-1]:
         return -1 #True
     return 0
 
