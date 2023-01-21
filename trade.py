@@ -1,4 +1,5 @@
 from talib.abstract import EMA, MACD
+import talib.abstract as ta
 from utils import plot_save_img
 import numpy as np
 
@@ -181,6 +182,25 @@ def collect_mtfssl_pvtdiver(df, short_ema, long_ema, day):
             return 2 #False
         else:
              return 0
+
+
+def ssl_hybrid(df, len1 = 30, mult=1, type_ssl='EMA'):
+    # # Keltner Baseline Channel
+    if type_ssl == 'WMA':
+        BBMC =  ta.WMA(2 * ta.WMA(df['close'], int(len1 / 2)) - ta.WMA(df['close'], len1), int(np.round(np.sqrt(len1))))
+    else:
+        BBMC = ta.EMA(df['close'],len1)
+    return BBMC
+    
+def ak_macd_bb(df,length = 10, dev =1, fastlength = 12, slowlength = 26, signallength = 9):
+    fastma = ta.EMA(df['close'], fastlength)
+    slowma = ta.EMA(df['close'], slowlength)
+    macd = fastma - slowma
+
+    stdev = macd.rolling(window=length).std()
+    Upper = (stdev * dev + (macd.rolling(window=length).mean()))
+    Lower = ((macd.rolling(window=length).mean()) - (stdev * dev))
+    return Upper, Lower
     
 
 
