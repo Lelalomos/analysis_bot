@@ -152,7 +152,7 @@ def pvt_with_divergence(df,short_length = 90, long_length = 95):
     return up, down, pvt_osc
 
 
-def collect_mtfssl_pvtdiver(df, short_ema, long_ema):
+def collect_mtfssl_pvtdiver(df, short_ema, long_ema, day):
     pvtup, pvtdown, pvt_osc = pvt_with_divergence(df, short_ema, long_ema)
     pvt_osc = pvt_osc[~np.isnan(pvt_osc)]
     pvtup = pvtup.dropna()
@@ -160,13 +160,31 @@ def collect_mtfssl_pvtdiver(df, short_ema, long_ema):
     sslup, ssldown = mtf_ssl(df)
     sslup = sslup.dropna()
     ssldown = ssldown.dropna()
-    # buy
-    if sslup.to_list()[-1] > ssldown.to_list()[-1] and pvt_osc[-1] > pvtup.to_list()[-1]:
-        return 2 #False
-    #     sell
-    elif sslup.to_list()[-1] < ssldown.to_list()[-1] and pvt_osc[-1] < pvtdown.to_list()[-1]:
-        return -1 #True
-    return 0
+
+    # current close value must better than close value in past
+    result_distance = 0
+    if day == 1:
+        result_distance = df['close'].iloc[-1] - df['close'].iloc[-2]
+        # buy
+        if sslup.to_list()[-1] > ssldown.to_list()[-1] and pvt_osc[-1] > pvtup.to_list()[-1] and result_distance >= 3:
+            return 2 #False
+        #     sell
+        elif sslup.to_list()[-1] < ssldown.to_list()[-1] and pvt_osc[-1] < pvtdown.to_list()[-1]:
+            return -1 #True
+        else:
+             return 0
+    else:
+        day *= -1
+        result_distance = df['close'].iloc[-1] - df['close'].iloc[day]
+
+        if sslup.to_list()[-1] > ssldown.to_list()[-1] and pvt_osc[-1] > pvtup.to_list()[-1] and result_distance >= 3:
+            return 2 #False
+        else:
+             return 0
+    
+
+
+    
 
 
 

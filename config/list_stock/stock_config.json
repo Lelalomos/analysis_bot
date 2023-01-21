@@ -2,6 +2,6 @@
     "list_stock":{
         "SET":["M", "CRC", "HMPRO", "TISCO", "CPALL", "KBANK", "DELTA", "AOT",
         "BANPU", "BDMS", "ADVANC", "PTTEP", "PTT", "COM7", "TOP", "SCB", "THG"],
-        "NASDAQ":["AAPL"]
+        "NASDAQ":["AAPL","TSLA","NFLX","BNTX","AMZN","MSFT","META","NVDA","GOOGL","GOOG","PYPL"]
     }
 }
