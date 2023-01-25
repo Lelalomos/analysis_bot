@@ -1,5 +1,6 @@
 from talib.abstract import EMA, MACD
 import talib.abstract as ta
+import talib
 from utils import plot_save_img
 import numpy as np
 
@@ -183,8 +184,8 @@ def collect_mtfssl_pvtdiver(df, short_ema, long_ema, day):
         else:
              return 0
 
-
-def ssl_hybrid(df, len1 = 30, mult=1, type_ssl='EMA'):
+# trend
+def ssl_hybrid(df, len1 = 30, type_ssl='EMA'):
     # # Keltner Baseline Channel
     if type_ssl == 'WMA':
         BBMC =  ta.WMA(2 * ta.WMA(df['close'], int(len1 / 2)) - ta.WMA(df['close'], len1), int(np.round(np.sqrt(len1))))
@@ -192,9 +193,9 @@ def ssl_hybrid(df, len1 = 30, mult=1, type_ssl='EMA'):
         BBMC = ta.EMA(df['close'],len1)
     return BBMC
     
-def ak_macd_bb(df,length = 10, dev =1, fastlength = 12, slowlength = 26, signallength = 9):
-    fastma = ta.EMA(df['close'], fastlength)
-    slowma = ta.EMA(df['close'], slowlength)
+def ak_macd_bb(df,length = 10, dev =1, fastlength = 12, slowlength = 26):
+    fastma = talib.EMA(df['close'], fastlength)
+    slowma = talib.EMA(df['close'], slowlength)
     macd = fastma - slowma
 
     stdev = macd.rolling(window=length).std()
@@ -202,6 +203,37 @@ def ak_macd_bb(df,length = 10, dev =1, fastlength = 12, slowlength = 26, signall
     Lower = ((macd.rolling(window=length).mean()) - (stdev * dev))
     return Upper, Lower
     
+# measure volume
+def vwap(df, n=30):
+    """Calculates the Volume Weighted Average Price (VWAP) indicator.
+    
+    Args:
+        df: A pandas DataFrame containing the 'close' and 'volume' columns.
+        n: The number of periods to use for the calculation.
+        
+    Returns:
+        A pandas Series containing the VWAP values.
+    """
+    # Create a new column for the rolling sum of volume multiplied by the closing price
+    df['vwap_sum'] = df['close'] * df['volume']
+    # Create a new column for the rolling sum of volume
+    df['volume_sum'] = df['volume']
+    # Calculate the VWAP
+    df['VWAP'] = df['vwap_sum'].rolling(n).sum() / df['volume_sum'].rolling(n).sum()
+    return df
+
+
+def macd_ssl_vwap(df):
+    up, down = ak_macd_bb(df)
+    bbmc = ssl_hybrid(df)
+    df = vwap(df)
+    buyers = df[df["close"] > df["VWAP"]].shape[0] / df.shape[0] * 100
+    sellers = df[df["close"] < df["VWAP"]].shape[0] / df.shape[0] * 100
+    if (down.iloc[-1:].values[0] - up.iloc[-1:].values[0]) >= 1.5 and down.iloc[-1:].values[0] >= 1 and (bbmc[-1] - df['close'].iloc[-1:]) >= 2 and buyers > sellers:
+        return 2
+    else: 
+        return 0
+
 
 
     

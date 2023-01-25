@@ -1,7 +1,8 @@
 {
     "list_stock":{
-        "SET":["M", "CRC", "HMPRO", "TISCO", "CPALL", "KBANK", "DELTA", "AOT",
-        "BANPU", "BDMS", "ADVANC", "PTTEP", "PTT", "COM7", "TOP", "SCB", "THG"],
+        "SET":["M", "CRC", "HMPRO", "TISCO", "CPALL", "KBANK", "DELTA", "AOT", "MINT", "SCGP", "UPA",
+        "BANPU", "BDMS", "ADVANC", "PTTEP", "PTT", "COM7", "TOP", "SCB", "THG", "MASTER", "UV", "TTB",
+        "AWC", "BBL", "BEM", "BGRIM", "BTS", "KTB", "TRUE", "CPF", "ACE", "AMATA", "AP", "BAM", "BEC", "EGCO"],
         "NASDAQ":["AAPL","TSLA","NFLX","BNTX","AMZN","MSFT","META","NVDA","GOOGL","GOOG","PYPL"]
     }
 }
