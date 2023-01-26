@@ -1,8 +1,21 @@
 {
     "list_stock":{
         "SET":["M", "CRC", "HMPRO", "TISCO", "CPALL", "KBANK", "DELTA", "AOT", "MINT", "SCGP", "UPA",
-        "BANPU", "BDMS", "ADVANC", "PTTEP", "PTT", "COM7", "TOP", "SCB", "THG", "MASTER", "UV", "TTB",
-        "AWC", "BBL", "BEM", "BGRIM", "BTS", "KTB", "TRUE", "CPF", "ACE", "AMATA", "AP", "BAM", "BEC", "EGCO"],
-        "NASDAQ":["AAPL","TSLA","NFLX","BNTX","AMZN","MSFT","META","NVDA","GOOGL","GOOG","PYPL"]
+        "BANPU", "BDMS", "ADVANC", "PTTEP", "PTT", "COM7", "TOP", "SCB", "THG", "UV", "TTB",
+        "AWC", "BBL", "BEM", "BGRIM", "BTS", "KTB", "TRUE", "CPF", "ACE", "AMATA", "AP", "BAM", "BEC", "EGCO",
+        "NER", "TVO", "QH", "LH", "KKP", "DCC", "SAT", "DRT", "ORI", "TU", "INTUCH", "BGC", "RATCH", "NOBLE", "THANI",
+        "PYLON", "SIRI", "KGI", "AIT", "TKS", "LHK", "GC", "ASK", "PM", "SMIT", "ASP", "WINNER", "MSC", "MFC",
+        "MFEC", "TMD", "PATO", "POPF", "SENA", "KCAR", "TTW", "BCP", "LANNA", "TCAP",
+        "PTTGC", "JTS", "TEAMG", "FSMART"],
+        "NASDAQ":["AAPL","TSLA","NFLX","BNTX","AMZN","MSFT","META","NVDA","GOOGL","GOOG","PYPL","CSCO","ADBE","INTU",
+        "IRDM","RKLB","VSAT","ASTS","SATS","GILT","ASTR","SATL","MNTS","RIVN","LCID","NKLA","LI","GGR","ARVL","PTRA",
+        "FFIE","GOEV","HYZN","NIU","REE","WKHS","RIDE","XOS","CENN","MULN","TLRY","SNDL","CRON","MAPS","ACB",
+        "OGI","XXII","AKAN"],
+        "NYSE":["ORCL","CRM","IBM","AJRD","MAXR","SPCE","PL","RDW","SPIR","BKSY","NIO","XPEV","FSR","LEV","HYLN"],
+        "CSE":["CURA","GTII","TRUL","VRNO","TER","CL","CCHW","AYR.A","JUSH","AAWH.U","PLTH"],
+        "EURONEXT":["MC","CDI","KER"],
+        "HKEX":["1913"],
+        "LSE":["BRBY"],
+        "MIL":["MONC","BC"]
     }
 }
