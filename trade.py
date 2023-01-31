@@ -102,21 +102,10 @@ def ichimoku_cloud(df, tenkansen_value = 9, kinjunsen_value = 26, shift_value = 
         else:
             return 0, df       
 
-def macd(df, namest):
-    df['macd_line'], df["signal_line"], _ = MACD(df['close'])
-    macd_line = list(df['macd_line'])
-    signal_line = list(df["signal_line"])
-
-    # config plot
-    plot_save_img(macd_line, signal_line, namest)
-        
-    #     buy
-    if macd_line[-1] > signal_line[-1]:
-        return 2, df #False
-    #     sell
-    elif macd_line[-1] < signal_line[-1]:
-        return -1, df #True
-    return 0, df
+def macd(df):
+    macd_line, signal_line, _ = MACD(df['close'])
+    # buy: macd_line[-1] > signal_line[-1], sell: macd_line[-1] < signal_line[-1] 
+    return list(macd_line), list(signal_line)
 
 
 def mtf_ssl(dataframe, length=250):
@@ -235,7 +224,42 @@ def macd_ssl_vwap(df):
         return 0
 
 
+def adx_di(df):
+    adx = talib.abstract.Function('ADX')(df['high'], df['low'], df['close'])
+    di_plus = talib.abstract.Function('PLUS_DI')(df['high'], df['low'], df['close'])
+    di_minus = talib.abstract.Function('MINUS_DI')(df['high'], df['low'], df['close'])
+    # buy adx >= 25 and di_plus > di_minus
+    return adx, di_plus, di_minus
+    
 
+
+def cross_rsi(df, rsi_short = 90, rsi_long = 95):
+    rsi_short_line = talib.RSI(df['close'],rsi_short)
+    rsi_long_line = talib.RSI(df['close'],rsi_long)
+    # rsi_short_line > rsi_long_line
+    return rsi_short_line, rsi_long_line
+
+
+def adxdi_crossrsi(df, short, long):
+    adx, di_plus, di_minus = adx_di(df)
+    rsi_short_line, rsi_long_line = cross_rsi(df, short, long)
+
+    if adx[-1] > 25 and di_plus[-1] > di_minus[-1] and rsi_short_line.iloc[-1] > rsi_long_line.iloc[-1]:
+        return 2
+    elif adx[-1] < 25 and di_plus[-1] < di_minus[-1] and rsi_short_line.iloc[-1] < rsi_long_line.iloc[-1]:
+        return -1
+    else:
+        return 0
+
+def macd_crossrsi(df, short, long):
+    rsi_short_line, rsi_long_line = cross_rsi(df, short, long)
+    macd_line, signal_line = macd(df)
+    if macd_line[-1] > signal_line[-1] and rsi_short_line.iloc[-1] > rsi_long_line.iloc[-1]:
+        return 2
+    elif macd_line[-1] < signal_line[-1] and rsi_short_line.iloc[-1] < rsi_long_line.iloc[-1]:
+        return -1
+    else:
+        return 0
     
 
 
