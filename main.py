@@ -1,59 +1,187 @@
-from tvDatafeed import TvDatafeed, Interval
-import multiprocessing as mp
-import json
+from tvDatafeed import TvDatafeed,Interval
 import pandas as pd
 import os
-from trade import cross_ema
+import json
+import numpy as np
+from trade import cross_ema, ichimoku_cloud, macd_crossrsi, collect_mtfssl_pvtdiver, macd_ssl_vwap, adxdi_crossrsi
+from sklearn import preprocessing
+import datetime
+# from talib.abstract import EMA, MACD
+
+pd.set_option('display.max_rows', 30)
+pd.set_option('display.max_columns', 30)
+pd.set_option('display.width', 1000)
+
+tv = TvDatafeed(username=None,password=None)
+
+with open(os.path.join(os.getcwd(),'config','list_stock','stock_config.json')) as f:
+    json_stock = json.load(f)
 
 def get_data(tv, exchange, name_stock, n_bars):
     return tv.get_hist(name_stock, exchange, interval=Interval.in_daily, n_bars=n_bars)
 
+# list stock config
+with open(os.path.join(os.getcwd(),'config','list_stock','stock_config.json')) as f:
+    json_stock = json.load(f)
 
-list_stock = list()
-indicator_config = {
-    "cross_ema":{
-        "low_span": 90,
-        "long_span": 95
-    },
-    "plot_config":{
-        "plot": True,
-        "n_bar": 60
-    }
-}
+assert json_stock is not None, "error read stock config"
 
-config = {
-    "find-min": True,
-    "find-max": True
-}
+# indicator config
+with open(os.path.join(os.getcwd(),'config','indicator','indicator.json')) as f:
+    indicator_config = json.load(f)
 
-if __name__ == "__main__":
-    # variable
-    tv = TvDatafeed(username=None,password=None)
+assert indicator_config is not None, "error read indicator config"
 
-    # load config
-    with open(os.path.join(os.getcwd(),'config','list_stock','stock_config.json')) as f:
-        json_stock = json.load(f)
+# config
+with open(os.path.join(os.getcwd(),'config','config.json')) as f:
+    config = json.load(f)
 
-    
-    for exc in json_stock:
-        for namest, nbar in json_stock[exc].items():
-            data = get_data(tv, exc, namest, nbar['limit_data'])
-            result_ema = cross_ema(data, namest, **indicator_config)
+assert config is not None, "error read config"
+
+current_date = datetime.datetime.today().date()
+
+
+for days in config['len_data']:
+    for key_exc in json_stock['list_stock']:
+        print(f'exchange: {key_exc}')
+
+        dict_min_value_1 = {}
+        dict_min_value_2 = {}
+        dict_remaining_date = {}
+
+        dict_stock_name_score = {}
+        for namest2dict in json_stock['list_stock'][key_exc]:
+            dict_stock_name_score.update({namest2dict:0})
+
+        for namest in json_stock['list_stock'][key_exc]:
+            try:
+                data = get_data(tv, key_exc, namest, days)
+                data = data.reset_index()
+                len_data = len(data)
+                print(f'stock name: {namest}:{len(data)}')
+            except Exception as e:
+                print(f'stock name: {namest}')
+                print(f'error: {e}')
+                continue
+
+            score_ema = 0
+            score_mtfssl_pvtdiver = 0
+            score_adxdi_crossrsi = 0
+            score_macd_crossrsi = 0
+            for iconfig in indicator_config['ema']:
+                try:
+                    result_ema = cross_ema(df = data, namest = namest, **iconfig)
+                except Exception as e:
+                    print(f'error {namest} cross_ema: {e}')
+                score_ema += result_ema[0]
+
+                try:
+                    retsult_adxdi = adxdi_crossrsi(data, iconfig['low_span'], iconfig['long_span'])
+                except Exception as e:
+                    print(f'error {namest} adxdi_crossrsi: {e}')
+                score_adxdi_crossrsi+=retsult_adxdi
+
+                try:
+                    result_macd = macd_crossrsi(data, iconfig['low_span'], iconfig['long_span'])
+                except Exception as e:
+                    print(f'error {namest} macd_crossrsi: {e}')
+                score_macd_crossrsi+=result_macd
+
+                for day in [30, 60, 90]:
+                    try:
+                        result_mtfssl_pvtdiver = collect_mtfssl_pvtdiver(data, iconfig['low_span'],iconfig['long_span'], day)
+                    except Exception as e:
+                        print(f'error {namest} collect_mtfssl_pvtdiver: {e}')
+                    score_mtfssl_pvtdiver += result_mtfssl_pvtdiver
+
+            try:
+                result_macd_ssl_vwap = macd_ssl_vwap(data)
+            except Exception as e:
+                print(f'error {namest} macd_ssl_vwap: {e}')
+
+            try:    
+                result_ichimoku = ichimoku_cloud(df = data, namest = namest)
+            except Exception as e:
+                print(f'error {namest} ichimoku_cloud: {e}')
+
+            # try:
+            #     result_macd = macd(df = data, namest= namest)
+            # except Exception as e:
+            #     print(f'error {namest} macd: {e}')
             
-            print()
-            print('name stock:',namest)
-            min_data = data[data['close'] == data['close'].min()]
-            min_data = min_data.reset_index()
-            print(f"min data --> date: {min_data['datetime'].values[0]}, close: {min_data['close'].values[0]}")
-            if result_ema == 1:
-                print('sell')
-            elif result_ema == 0:
-                print('buy')
-            else:
-                print('noting')
-            print()
-    
+            if score_mtfssl_pvtdiver > 6:
+                    score_mtfssl_pvtdiver = 5
 
-    
+            dict_stock_name_score[namest] = dict_stock_name_score[namest] + score_ema + result_ichimoku[0] + score_macd_crossrsi + score_mtfssl_pvtdiver + result_macd_ssl_vwap + score_adxdi_crossrsi
 
-    
+            # print('dict_stock_name_score:', dict_stock_name_score)
+            # find row with the least close value 
+            # df = df[df['close'] == min(list(df['close']))] 
+
+            # find date with the least value in data. do it every month
+            list_time = [62, 93]
+            for t in list_time:
+                data_follow_time = get_data(tv, key_exc, namest, t)
+                data_follow_time = data_follow_time.reset_index()
+
+                # find min value in dataframe
+                data_cal_number_days = data_follow_time[data_follow_time['close'] == min(list(data_follow_time['close']))]
+                # convert timestamp to datetime.date
+                if len(data_cal_number_days) > 1:
+                    data_cal_number_days = data_cal_number_days.iloc[-1,:]
+                    date_min_value = data_cal_number_days['datetime'].to_pydatetime().date()
+                else:
+                    # convert numpy.datetime64 to datetime
+                    date_min_value = pd.to_datetime(data_cal_number_days['datetime'].values[0]).to_pydatetime().date()
+                # date_min_value = data_cal_number_days['datetime'].to_pydatetime().date()
+                remaining_date = current_date - date_min_value
+                
+                df_min_value = data_follow_time[data_follow_time['close'] == min(list(data_follow_time['close']))]
+                df_current_value = data_follow_time.iloc[-2:-1,:]
+                if t == 62:
+                    dict_min_value_1[namest] = df_current_value['close'].values[0] - min(list(data_follow_time['close']))
+                    dict_remaining_date[namest] = remaining_date.days
+                else:
+                    dict_min_value_2[namest] = df_current_value['close'].values[0] - min(list(data_follow_time['close']))
+                    dict_remaining_date[namest] = remaining_date.days
+
+
+        # sort data by current close value minus the smallest a value in the past
+        dict_min_value_1_sort = dict(sorted(dict_min_value_1.items(), key=lambda item: item[1], reverse=True))
+        dict_min_value_2_sort = dict(sorted(dict_min_value_2.items(), key=lambda item: item[1], reverse=True))
+        # sort data remaining date
+        dict_remaining_date_sort = dict(sorted(dict_remaining_date.items(), key=lambda item: item[1], reverse=True))
+
+        # print('-'*100)
+        # print('dict_min_value_1_sort:',dict_min_value_1_sort)
+        # print('-'*100)
+
+        # print('result step 1:',dict_stock_name_score)
+
+        # loop increase score
+        for dict_sort_value in [dict_min_value_1_sort, dict_min_value_2_sort, dict_remaining_date_sort]:
+            # normalize score
+            list_score = [i*100 for i in range(1,len(dict_sort_value)+1)]
+            np_score = np.array(list_score)
+            normalized_arr = preprocessing.normalize([np_score])
+
+            dict_score = {} 
+            for score,(k,v) in zip(normalized_arr.tolist()[0],dict_sort_value.items()):
+                dict_score.update({k:score})
+
+            for k,v in dict_score.items():
+                dict_stock_name_score[k] = dict_stock_name_score[k] + dict_score[k]
+
+        print('score:',dict_stock_name_score)
+
+        dict_stock_name_score_sort = dict(sorted(dict_stock_name_score.items(), key=lambda item: item[1], reverse=True))
+
+        print('dict_stock_name_score_sort final:',dict_stock_name_score_sort)
+        
+        print(f'days: {days}')
+        print('-'*100)
+        for k,v in dict_stock_name_score_sort.items():
+            print(k,v)
+        print('-'*100)
+
+            
