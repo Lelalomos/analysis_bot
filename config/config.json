@@ -1,0 +1,5 @@
+{
+    "find-min": true,
+    "find-max": true,
+    "len_data": [365, 1000, 3000]
+}

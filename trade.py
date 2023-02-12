@@ -262,5 +262,10 @@ def macd_crossrsi(df, short, long):
         return 0
     
 
+def chaikin_money_flow(df, lenght):
+    mfv = df['volume'] * (2*df['close'] - df['high'] - df['low']) / (df['high'] - df['low'])
+    mfv = mfv.rolling(lenght).sum()
+    mfv = mfv / df['volume'].rolling(lenght).sum()
+    return mfv
 
 

@@ -1,6 +1,16 @@
 {
-    "cross_ema":{
-        "low_span": 90,
-        "long_span":95
-    }
+    "ema":[
+        {
+            "low_span": 30,
+            "long_span": 35
+        },
+        {
+            "low_span": 90,
+            "long_span": 95
+        },
+        {
+            "low_span": 100,
+            "long_span": 200
+        }
+    ]
 }
