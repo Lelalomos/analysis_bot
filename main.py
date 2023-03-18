@@ -14,9 +14,6 @@ pd.set_option('display.width', 1000)
 
 tv = TvDatafeed(username=None,password=None)
 
-with open(os.path.join(os.getcwd(),'config','list_stock','stock_config.json')) as f:
-    json_stock = json.load(f)
-
 def get_data(tv, exchange, name_stock, n_bars):
     return tv.get_hist(name_stock, exchange, interval=Interval.in_daily, n_bars=n_bars)
 
