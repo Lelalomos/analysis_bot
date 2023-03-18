@@ -1,5 +1,5 @@
 {
     "list_stock":{
-        "SET":["M", "CRC", "HMPRO", "TISCO", "CPALL", "KBANK"]
+        "SET":["bbl"]
     }
 }

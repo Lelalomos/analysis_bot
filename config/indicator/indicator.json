@@ -12,5 +12,54 @@
             "low_span": 100,
             "long_span": 200
         }
+    ],
+    "short_term_ema":[
+        {
+            "low_span": 15,
+            "long_span": 20
+        }
+    ],
+    "cross_rsi":[
+        {
+            "rsi_short":30,
+            "rsi_long":75
+        }
+    ],
+    "cross_ema":[
+        {
+            "low_span": 30,
+            "long_span": 35
+        },
+        {
+            "low_span": 90,
+            "long_span": 95
+        },
+        {
+            "low_span": 100,
+            "long_span": 200
+        }
+    ],
+    "macd":[
+        {
+            "fastperiod": 12, 
+            "slowperiod": 26, 
+            "signalperiod": 9
+        }
+    ],
+    "ichimoku_cloud":[
+        {
+            "tenkansen_value": 9, 
+            "kinjunsen_value": 26, 
+            "shift_value": 26, 
+            "senkou_b_value": 52
+        }
+    ],
+    "collect_mtfssl_pvtdiver":[
+        {
+            "day": 30,
+            "low_span": 30,
+            "long_span": 35,
+            "length_mtf_ssl": 250
+        }
     ]
 }
