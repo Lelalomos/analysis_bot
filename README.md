@@ -1,2 +1,4 @@
-# stock_bot
-## YOU CAN RUN install_lib.sh for install all lib in python version 3.9
+# Stock Bot
+### python 3.9 version
+### you can run install_lib.sh file for install all library
+
