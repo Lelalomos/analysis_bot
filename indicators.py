@@ -1,5 +1,6 @@
 import numpy as np
-from talib.abstract import EMA
+from talib.abstract import EMA, MACD
+import talib
 
 def mtf_ssl(dataframe, length=250):
     df = dataframe.copy()
@@ -33,3 +34,21 @@ def pvt_with_divergence(df,short_length = 30, long_length = 35):
     # down = (-(df['close'] - df['close'].shift(1) < 0)).rolling(window=short_length).mean()
 
     return up, down, pvt_osc
+
+def adx_di(df):
+    adx = talib.abstract.Function('ADX')(df['high'], df['low'], df['close'])
+    di_plus = talib.abstract.Function('PLUS_DI')(df['high'], df['low'], df['close'])
+    di_minus = talib.abstract.Function('MINUS_DI')(df['high'], df['low'], df['close'])
+    # buy adx >= 25 and di_plus > di_minus
+    return adx, di_plus, di_minus
+
+def cross_rsi_line(df, rsi_short = 30, rsi_long = 35):
+    rsi_short_line = talib.RSI(df['close'],rsi_short)
+    rsi_long_line = talib.RSI(df['close'],rsi_long)
+    # rsi_short_line > rsi_long_line
+    return rsi_short_line, rsi_long_line
+
+def macd_indicator_line(df, fastperiod=12, slowperiod=26, signalperiod=9):
+    macd_line, signal_line, _ = MACD(df['close'], fastperiod, slowperiod, signalperiod)
+    # buy: macd_line[-1] > signal_line[-1], sell: macd_line[-1] < signal_line[-1] 
+    return list(macd_line), list(signal_line)

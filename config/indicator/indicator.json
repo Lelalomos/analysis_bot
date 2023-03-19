@@ -61,5 +61,20 @@
             "long_span": 35,
             "length_mtf_ssl": 250
         }
+    ],
+    "adxdi_crossrsi":[
+        {
+            "rsi_short":30,
+            "rsi_long":35
+        }
+    ],
+    "macd_crossrsi":[
+        {
+            "rsi_short":30,
+            "rsi_long":35,
+            "fastperiod":12, 
+            "slowperiod":26, 
+            "signalperiod":9
+        }
     ]
 }

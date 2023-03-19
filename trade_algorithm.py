@@ -2,7 +2,7 @@ from talib.abstract import EMA, MACD
 import talib.abstract as ta
 import talib
 import numpy as np
-from indicators import mtf_ssl, pvt_with_divergence
+from indicators import mtf_ssl, pvt_with_divergence, adx_di, cross_rsi_line, macd_indicator_line
 
 class indicators:
     def __init__(self):
@@ -118,6 +118,27 @@ class indicators:
             if sslup.to_list()[-1] > ssldown.to_list()[-1] and pvt_osc[-1] > pvtup.to_list()[-1] and result_distance >= 3:
                 return 2 #False
             
+        return 0
+    
+    def adxdi_crossrsi(self, df, config):
+        adx, di_plus, di_minus = adx_di(df)
+        rsi_short_line, rsi_long_line = cross_rsi_line(df, config['rsi_short'], config['rsi_long'])
+
+        if adx[-1] > 25 and di_plus[-1] > di_minus[-1] and rsi_short_line.iloc[-1] > rsi_long_line.iloc[-1]:
+            return 2
+        elif adx[-1] < 25 and di_plus[-1] < di_minus[-1] and rsi_short_line.iloc[-1] < rsi_long_line.iloc[-1]:
+            return -1
+        
+        return 0
+    
+    def macd_crossrsi(self, df, config):
+        rsi_short_line, rsi_long_line = cross_rsi_line(df, config['rsi_short'], config['rsi_long'])
+        macd_line, signal_line = macd_indicator_line(df, config['fastperiod'], config['slowperiod'], config['signalperiod'])
+        if macd_line[-1] > signal_line[-1] and rsi_short_line.iloc[-1] > rsi_long_line.iloc[-1]:
+            return 2
+        elif macd_line[-1] < signal_line[-1] and rsi_short_line.iloc[-1] < rsi_long_line.iloc[-1]:
+            return -1
+        
         return 0
     
     def process(self, name, df, config):

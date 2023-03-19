@@ -1,4 +1,4 @@
 {
     "len_data": [365],
-    "inducators":["cross_ema", "cross_rsi", "macd", "ichimoku_cloud", "collect_mtfssl_pvtdiver"]
+    "inducators":["cross_ema", "cross_rsi", "macd", "ichimoku_cloud", "collect_mtfssl_pvtdiver", "adxdi_crossrsi", "macd_crossrsi"]
 }
