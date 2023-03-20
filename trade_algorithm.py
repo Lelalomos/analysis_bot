@@ -2,7 +2,8 @@ from talib.abstract import EMA, MACD
 import talib.abstract as ta
 import talib
 import numpy as np
-from indicators import mtf_ssl, pvt_with_divergence, adx_di, cross_rsi_line, macd_indicator_line
+from indicators import mtf_ssl, pvt_with_divergence, adx_di, cross_rsi_line, macd_indicator_line\
+, ak_macd_bb, ssl_hybrid, vwap
 from decorators import log_errors
 
 class indicators:
@@ -147,6 +148,18 @@ class indicators:
             return -1
         
         return 0
+    
+    @log_errors
+    def macd_ssl_vwap(self, df, config):
+        up, down = ak_macd_bb(df, config['length_akmacdbb'], config['dev'], config['fastlength'], config['slowlength'])
+        bbmc = ssl_hybrid(df, config['len1_sslhy'], config['type_ssl'])
+        df = vwap(df, config['n_vwap'])
+        buyers = df[df["close"] > df["VWAP"]].shape[0] / df.shape[0] * 100
+        sellers = df[df["close"] < df["VWAP"]].shape[0] / df.shape[0] * 100
+        if (down.iloc[-1:].values[0] - up.iloc[-1:].values[0]) >= 1.5 and down.iloc[-1:].values[0] >= 1 and (bbmc[-1] - df['close'].iloc[-1:]) >= 2 and buyers > sellers:
+            return 2
+        else: 
+            return 0
     
     @log_errors
     def process(self, name, df, config):

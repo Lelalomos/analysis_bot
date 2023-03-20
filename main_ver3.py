@@ -39,7 +39,6 @@ assert config is not None, "error read config"
 # find current date
 current_date = datetime.datetime.today().date()
 
-list_time = [62, 93, 124, 155]
 indicator_engine = indicators()
 
 for days in config['len_data']:
@@ -58,7 +57,7 @@ for days in config['len_data']:
         for namest2dict in json_stock['list_stock'][key_exc]:
             dict_stock_name_score.update({namest2dict:0})
             dict_remaining_date.update({namest2dict:{}})
-            for t in list_time:
+            for t in config['list_time']:
                 dict_remaining_date[namest2dict].update({f"{t}":0})
 
         for namest in json_stock['list_stock'][key_exc]:
@@ -73,7 +72,7 @@ for days in config['len_data']:
                 continue
 
             score = 0
-            for indicator in config['first_indicators']:
+            for indicator in config['long_indicators']:
                 print('indicator:',indicator)
                 score += indicator_engine.process(f"{indicator}", data, indicator_config[f'{indicator}'])
                 

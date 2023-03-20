@@ -76,5 +76,16 @@
             "slowperiod":26, 
             "signalperiod":9
         }
+    ],
+    "macd_ssl_vwap":[
+        {
+            "length_akmacdbb": 10,
+            "dev": 1,
+            "fastlength": 12,
+            "slowlength": 26,
+            "len1_sslhy": 30,
+            "type_ssl": "EMA",
+            "n_vwap": 30
+        }
     ]
 }
