@@ -3,11 +3,13 @@ import talib.abstract as ta
 import talib
 import numpy as np
 from indicators import mtf_ssl, pvt_with_divergence, adx_di, cross_rsi_line, macd_indicator_line
+from decorators import log_errors
 
 class indicators:
     def __init__(self):
         pass
-        
+    
+    @log_errors
     def cross_ema(self, df, config):
         low_span = config['low_span']
         long_span = config['long_span']
@@ -28,6 +30,7 @@ class indicators:
         
         return 0
     
+    @log_errors
     def cross_rsi(self, df, config):
         rsi_short_line = talib.RSI(df['close'],config['rsi_short'])
         rsi_long_line = talib.RSI(df['close'],config['rsi_long'])
@@ -39,6 +42,7 @@ class indicators:
 
         return 0
     
+    @log_errors
     def macd(self, df, config):
         macd_line, signal_line, _ = MACD(df['close'], config['fastperiod'], config['slowperiod'], config['signalperiod'])
         if macd_line[-1] > signal_line[-1]:
@@ -47,7 +51,7 @@ class indicators:
             return -1
         return 0
     
-
+    @log_errors
     def ichimoku_cloud(self, df, config):
 
         # Tenkan-sen (Conversion Line): (9-period high + 9-period low)/2))
@@ -92,6 +96,7 @@ class indicators:
         
         return 0
     
+    @log_errors
     def collect_mtfssl_pvtdiver(self, df, config):
         pvtup, pvtdown, pvt_osc = pvt_with_divergence(df, config['low_span'], config['long_span'])
         pvt_osc = pvt_osc[~np.isnan(pvt_osc)]
@@ -120,6 +125,7 @@ class indicators:
             
         return 0
     
+    @log_errors
     def adxdi_crossrsi(self, df, config):
         adx, di_plus, di_minus = adx_di(df)
         rsi_short_line, rsi_long_line = cross_rsi_line(df, config['rsi_short'], config['rsi_long'])
@@ -131,6 +137,7 @@ class indicators:
         
         return 0
     
+    @log_errors
     def macd_crossrsi(self, df, config):
         rsi_short_line, rsi_long_line = cross_rsi_line(df, config['rsi_short'], config['rsi_long'])
         macd_line, signal_line = macd_indicator_line(df, config['fastperiod'], config['slowperiod'], config['signalperiod'])
@@ -141,6 +148,7 @@ class indicators:
         
         return 0
     
+    @log_errors
     def process(self, name, df, config):
         sum_score = 0 
         for cf in config:

@@ -73,7 +73,7 @@ for days in config['len_data']:
                 continue
 
             score = 0
-            for indicator in config['inducators']:
+            for indicator in config['first_indicators']:
                 print('indicator:',indicator)
                 score += indicator_engine.process(f"{indicator}", data, indicator_config[f'{indicator}'])
                 
