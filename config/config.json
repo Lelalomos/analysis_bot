@@ -1,6 +1,6 @@
 {
     "len_data": [365],
-    "long_indicators":["cross_ema", "cross_rsi", "macd", "ichimoku_cloud", "collect_mtfssl_pvtdiver", "adxdi_crossrsi", "macd_crossrsi"],
-    "short_indicators":["macd","cross_ema","cross_rsi"],
+    "long_indicators":["cross_ema", "cross_rsi", "ichimoku_cloud", "adxdi_crossrsi", "macd_crossrsi"],
+    "short_indicators":["cross_ema","cross_rsi","macd", "adxdi_crossrsi", "macd_crossrsi"],
     "list_time": [62, 93, 124, 155]
 }

@@ -1,0 +1,46 @@
+{
+    "cross_ema":[
+        {
+            "low_span": 70,
+            "long_span": 75
+        },
+        {
+            "low_span": 100,
+            "long_span": 200
+        }
+    ],
+    "cross_rsi":[
+        {
+            "rsi_short":70,
+            "rsi_long":75
+        },
+        {
+            "rsi_short":100,
+            "rsi_long":200
+        }
+
+    ],
+    "ichimoku_cloud":[
+        {
+            "tenkansen_value": 18, 
+            "kinjunsen_value": 52, 
+            "shift_value": 26, 
+            "senkou_b_value": 104
+        }
+    ],
+    "adxdi_crossrsi":[
+        {
+            "rsi_short":70,
+            "rsi_long":75
+        }
+    ],
+    "macd_crossrsi":[
+        {
+            "rsi_short":50,
+            "rsi_long":55,
+            "fastperiod":26, 
+            "slowperiod":52, 
+            "signalperiod":9
+        }
+    ]
+}

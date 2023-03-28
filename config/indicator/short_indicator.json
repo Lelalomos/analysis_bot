@@ -1,0 +1,36 @@
+{
+    "cross_ema":[
+        {
+        "low_span": 20,
+        "long_span": 25
+        }
+    ],
+    "cross_rsi":[
+        {
+            "rsi_short":20,
+            "rsi_long":25
+        }
+    ],
+    "macd":[
+        {
+            "fastperiod": 12, 
+            "slowperiod": 26, 
+            "signalperiod": 9
+        }
+    ],
+    "adxdi_crossrsi":[
+        {
+            "rsi_short":20,
+            "rsi_long":25
+        }
+    ],
+    "macd_crossrsi":[
+        {
+            "rsi_short":20,
+            "rsi_long":25,
+            "fastperiod":12, 
+            "slowperiod":26, 
+            "signalperiod":9
+        }
+    ]
+}
