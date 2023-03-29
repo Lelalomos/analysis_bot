@@ -19,17 +19,23 @@ def get_data(tv, exchange, name_stock, n_bars):
     return tv.get_hist(name_stock, exchange, interval=Interval.in_daily, n_bars=n_bars)
 
 # list stock config
-with open(os.path.join(os.getcwd(),'config','list_stock','stock_test.json')) as f:
+with open(os.path.join(os.getcwd(),'config','list_stock','stock_config.json')) as f:
     json_stock = json.load(f)
 
 assert json_stock is not None, "error read stock config"
 
 
-# indicator config
-with open(os.path.join(os.getcwd(),'config','indicator','indicator.json')) as f:
-    indicator_config = json.load(f)
+# indicator config for long term
+with open(os.path.join(os.getcwd(),'config','indicator','long_indicator.json')) as f:
+    indicator_config_long = json.load(f)
 
-assert indicator_config is not None, "error read indicator config"
+assert indicator_config_long is not None, "error read indicator config (long term)"
+
+# indicator config for short term
+with open(os.path.join(os.getcwd(),'config','indicator','short_indicator.json')) as f:
+    indicator_config_short = json.load(f)
+
+assert indicator_config_short is not None, "error read indicator config (short term)"
 
 # config
 with open(os.path.join(os.getcwd(),'config','config.json')) as f:
@@ -68,7 +74,7 @@ for days in config['len_data']:
                 data = get_data(tv, key_exc, namest, days)
                 data = data.reset_index()
                 len_data = len(data)
-                print(f'stock name: {namest}:{len_data}')
+                # print(f'stock name: {namest}:{len_data}')
             except Exception as e:
                 print(f'stock name: {namest}')
                 print(f'error: {e}')
@@ -77,10 +83,10 @@ for days in config['len_data']:
             score = 0
             # first indicators
             for indicator in config['long_indicators']:
-                print('indicator:',indicator)
-                score += indicator_engine.process(f"{indicator}", data, indicator_config[f'{indicator}'])
+                # print('indicator:',indicator)
+                score += indicator_engine.process(f"{indicator}", data, indicator_config_long[f'{indicator}'])
             
-            print('score:',score)
+            # print('score:',score)
             dict_stock_name_score[namest] = score
 
             for t in config['list_time']:
@@ -178,4 +184,37 @@ for days in config['len_data']:
             if stock_sc in dict_pair_daywithscore['min_date']:
                 # list_date_less_than_10.append(stock_sc)
                 print(stock_sc)
+
+        # testing
+        # trend up 
+        dict_stock_trend_up = {}
+        for tup in dict_pair_daywithscore['min_date']:
+            dict_stock_trend_up.update({tup:0})
+
+        for tup in dict_pair_daywithscore['min_date']:
+            try:
+                data = get_data(tv, key_exc, tup, days)
+                data = data.reset_index()
+                len_data = len(data)
+                # print(f'stock name: {tup}:{len_data}')
+            except Exception as e:
+                print(f'stock name: {tup}')
+                print(f'error: {e}')
+                continue
+
+            score = 0
+            # first indicators
+            for indicator in config['short_indicators']:
+                # print('indicator:',indicator)
+                score += indicator_engine.process(f"{indicator}", data, indicator_config_short[f'{indicator}'])
+
+            dict_stock_trend_up[tup] = score
+
+        dict_stock_trend_up_sort = dict(sorted(dict_stock_trend_up.items(), key=lambda item: item[1], reverse=True))
+        print('trend up')
+        for k,v in dict_stock_trend_up_sort.items():
+            print(k,v)
+
+        print()
+
             
