@@ -49,8 +49,9 @@ assert config is not None, "error read config"
 current_date = datetime.datetime.today().date()
 
 indicator_engine = indicators()
+mode = config['mode']
 
-for days in config['len_data']:
+for days in config[mode]['len_data']:
     for key_exc in json_stock['list_stock']:
         print(f'exchange: {key_exc}')
 
@@ -66,7 +67,7 @@ for days in config['len_data']:
         for namest2dict in json_stock['list_stock'][key_exc]:
             dict_stock_name_score.update({namest2dict:0})
             dict_remaining_date.update({namest2dict:{}})
-            for t in config['list_time']:
+            for t in config[mode]['list_time']:
                 dict_remaining_date[namest2dict].update({f"{t}":0})
 
         for namest in json_stock['list_stock'][key_exc]:
@@ -82,14 +83,14 @@ for days in config['len_data']:
 
             score = 0
             # first indicators
-            for indicator in config['long_indicators']:
+            for indicator in config[mode]['long_indicators']:
                 # print('indicator:',indicator)
                 score += indicator_engine.process(f"{indicator}", data, indicator_config_long[f'{indicator}'])
             
             # print('score:',score)
             dict_stock_name_score[namest] = score
 
-            for t in config['list_time']:
+            for t in config[mode]['list_time']:
                 data_follow_time = get_data(tv, key_exc, namest, t)
                 data_follow_time = data_follow_time.reset_index()
 
@@ -121,7 +122,7 @@ for days in config['len_data']:
         # increse score following by date
         dict_prepare_sort = {}
         score_follow_time = 0.5
-        for data_v in config['list_time']:
+        for data_v in config[mode]['list_time']:
             for key,_ in dict_remaining_date.items():
                 dict_prepare_sort[key] = dict_remaining_date[key][f"{data_v}"]
             
@@ -130,7 +131,7 @@ for days in config['len_data']:
 
             reverse_date_tomin_first = dict(sorted(dict_remaining_date_sort.items(), key=lambda item: item[1]))
             
-            print('min close value of number of day: ',data_v)
+            print(f'List stock name of the lowest close value in the {data_v} days')
             for k,v in reverse_date_tomin_first.items():
                 if int(v) <= 10:
                     dict_pair_daywithscore['min_date'].append(k)
@@ -178,7 +179,7 @@ for days in config['len_data']:
         print('-'*100)
 
         # pair
-        print('... date and score ...')
+        print(f'The name of the stock that has reached the lowest price in {config[mode]["list_time"]} days')
         dict_pair_daywithscore['stock_score'] = dict_pair_daywithscore['stock_score'][:10]
         for stock_sc in dict_pair_daywithscore['stock_score']:
             if stock_sc in dict_pair_daywithscore['min_date']:
@@ -204,17 +205,15 @@ for days in config['len_data']:
 
             score = 0
             # first indicators
-            for indicator in config['short_indicators']:
+            for indicator in config[mode]['short_indicators']:
                 # print('indicator:',indicator)
                 score += indicator_engine.process(f"{indicator}", data, indicator_config_short[f'{indicator}'])
 
             dict_stock_trend_up[tup] = score
 
         dict_stock_trend_up_sort = dict(sorted(dict_stock_trend_up.items(), key=lambda item: item[1], reverse=True))
-        print('trend up')
+        print('the name of stock is trend up')
         for k,v in dict_stock_trend_up_sort.items():
             print(k,v)
 
         print()
-
-            

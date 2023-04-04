@@ -1,6 +1,12 @@
 {
-    "len_data": [365],
-    "long_indicators":["cross_ema", "cross_rsi", "ichimoku_cloud", "adxdi_crossrsi", "macd_crossrsi"],
-    "short_indicators":["cross_ema","cross_rsi","macd", "adxdi_crossrsi", "macd_crossrsi"],
-    "list_time": [62, 93, 124, 155]
+    "mode": "stock",
+    "stock":{
+        "len_data": [365],
+        "long_indicators":["cross_ema", "cross_rsi", "ichimoku_cloud", "adxdi_crossrsi", "macd_crossrsi"],
+        "short_indicators":["cross_ema","cross_rsi","macd", "adxdi_crossrsi", "macd_crossrsi"],
+        "list_time": [62, 93, 124, 155]
+    },
+    "fund":{
+        "long_indicators":["cross_ema", "cross_rsi", "macd_crossrsi"]
+    }
 }
