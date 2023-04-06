@@ -52,7 +52,7 @@ indicator_engine = indicators()
 mode = config['mode']
 
 for days in config[mode]['len_data']:
-    for key_exc in json_stock['list_stock']:
+    for key_exc in json_stock[f'list_{mode}']:
         print(f'exchange: {key_exc}')
 
         dict_min_value_1 = {}
@@ -64,18 +64,16 @@ for days in config[mode]['len_data']:
         }
 
         dict_stock_name_score = {}
-        for namest2dict in json_stock['list_stock'][key_exc]:
+        for namest2dict in json_stock[f'list_{mode}'][key_exc]:
             dict_stock_name_score.update({namest2dict:0})
             dict_remaining_date.update({namest2dict:{}})
             for t in config[mode]['list_time']:
                 dict_remaining_date[namest2dict].update({f"{t}":0})
 
-        for namest in json_stock['list_stock'][key_exc]:
+        for namest in json_stock[f'list_{mode}'][key_exc]:
             try:
                 data = get_data(tv, key_exc, namest, days)
                 data = data.reset_index()
-                len_data = len(data)
-                # print(f'stock name: {namest}:{len_data}')
             except Exception as e:
                 print(f'stock name: {namest}')
                 print(f'error: {e}')
@@ -196,8 +194,6 @@ for days in config[mode]['len_data']:
             try:
                 data = get_data(tv, key_exc, tup, days)
                 data = data.reset_index()
-                len_data = len(data)
-                # print(f'stock name: {tup}:{len_data}')
             except Exception as e:
                 print(f'stock name: {tup}')
                 print(f'error: {e}')

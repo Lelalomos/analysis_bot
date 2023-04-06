@@ -1,6 +1,6 @@
 {
     "list_stock":{
-        "SET":["M", "CRC", "HMPRO", "TISCO", "CPALL", "KBANK", "DELTA", "AOT", "MINT", "SCGP", "UPA",
+        "SET":["M", "CRC", "HMPRO", "TISCO", "CPALL", "KBANK", "DELTA", "AOT", "MINT", "SCGP",
         "BANPU", "BDMS", "ADVANC", "PTTEP", "PTT", "COM7", "TOP", "SCB", "THG", "UV", "TTB",
         "AWC", "BBL", "BEM", "BGRIM", "BTS", "KTB", "TRUE", "CPF", "ACE", "AMATA", "AP", "BAM", "BEC", "EGCO",
         "NER", "TVO", "QH", "LH", "KKP", "DCC", "SAT", "DRT", "ORI", "TU", "INTUCH", "BGC", "RATCH", "NOBLE", "THANI",

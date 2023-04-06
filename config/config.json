@@ -7,6 +7,9 @@
         "list_time": [62, 93, 124, 155]
     },
     "fund":{
-        "long_indicators":["cross_ema", "cross_rsi", "macd_crossrsi"]
+        "len_data": [365],
+        "long_indicators":["cross_ema", "cross_rsi", "macd_crossrsi"],
+        "short_indicators":["cross_ema","cross_rsi", "macd_crossrsi"],
+        "list_time": [62, 93, 124, 155]
     }
 }
