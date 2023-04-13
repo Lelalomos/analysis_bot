@@ -1,11 +1,9 @@
 # Stock analysis bot
 ##### All using Python 3.9 version
     - You can run install_lib.sh file for install all library
-&nbsp;
 ##### detail:
     - More flexible
     - Easy to use
-&nbsp;
 ##### how to config bot version 3?
 ###### config indicator parameter have 2 choice
     - long_indicator file for long-term data analysis
