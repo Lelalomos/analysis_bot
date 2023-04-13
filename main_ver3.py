@@ -75,7 +75,6 @@ for key_exc in json_stock[f'list_{mode}']:
         if config['fetch_newdata'] == "on":
             try:
                 data = get_data(tv, nav, key_exc, namest, max_days, mode)
-                print("len data:",len(data))
                 if len(data) == 0:
                     continue
             except Exception as e:
