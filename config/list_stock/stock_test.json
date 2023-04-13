@@ -1,5 +1,9 @@
 {
     "list_stock":{
-        "SET":["bbl"]
+        "SET":["M", "CRC", "HMPRO"],
+        "NASDAQ":["AAPL","TSLA"]
+    },
+    "list_fund":{
+        "HAVE_DIVIDEND":["K-GA-A(D)", "KTFIXPLUS-D"]
     }
 }
