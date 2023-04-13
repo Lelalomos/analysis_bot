@@ -85,8 +85,10 @@ def get_data(tv, nav, exchange, name, n_bars, mode):
 def load_data(name, mode, exchange, time):
     try:
         loadd = pd.read_parquet(os.path.join(os.getcwd(),'data', mode, exchange ,f"{name}.parquet"))
-        if len(loadd) > 0:
-            return loadd.iloc[:time,:]
+        if int(loadd.shape[0]) == time or int(loadd.shape[0]) < time:
+            return loadd
+        elif int(loadd.shape[0]) >= time:
+            return loadd.iloc[time:,:]
         else:
             return []
     except Exception as e:

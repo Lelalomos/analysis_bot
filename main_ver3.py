@@ -22,7 +22,6 @@ with open(os.path.join(os.getcwd(),'config','list_stock','stock_config.json')) a
 
 assert json_stock is not None, "error read stock config"
 
-
 # indicator config for long term
 with open(os.path.join(os.getcwd(),'config','indicator','long_indicator.json')) as f:
     indicator_config_long = json.load(f)
@@ -41,10 +40,8 @@ with open(os.path.join(os.getcwd(),'config','config.json')) as f:
 
 assert config is not None, "error read config"
 
-# print('dict_stock_name_score:',dict_stock_name_score)
 # find current date
 current_date = datetime.datetime.today().date()
-
 
 indicator_engine = indicators()
 
@@ -82,7 +79,7 @@ for key_exc in json_stock[f'list_{mode}']:
                 print(f'error: {e}')
                 continue
         else:
-            data = load_data(namest, mode, key_exc, t)
+            data = load_data(namest, mode, key_exc, max_days)
 
         score = 0
         # first indicators
@@ -95,12 +92,10 @@ for key_exc in json_stock[f'list_{mode}']:
 
         for t in config[mode]['len_data']:
             data_follow_time = load_data(namest, mode, key_exc, t)
-            
-            # data_follow_time = get_data(tv, key_exc, namest, t)
-            # data_follow_time = data_follow_time.reset_index()
 
             # find min value in dataframe
             data_cal_number_days = data_follow_time[data_follow_time['close'] == min(list(data_follow_time['close']))]
+
             # convert timestamp to datetime.date
             if len(data_cal_number_days) > 1:
                 data_cal_number_days = data_cal_number_days.iloc[-1,:]
@@ -119,7 +114,7 @@ for key_exc in json_stock[f'list_{mode}']:
             else:
                 dict_remaining_date[namest][f'{t}'] = remaining_date.days
                 dict_min_value_2[namest] = df_current_value['close'].values[0] - min(list(data_follow_time['close']))
-
+            
     # sort data by current close value minus the smallest a value in the past
     dict_min_value_1_sort = dict(sorted(dict_min_value_1.items(), key=lambda item: item[1], reverse=True))
     dict_min_value_2_sort = dict(sorted(dict_min_value_2.items(), key=lambda item: item[1], reverse=True))
