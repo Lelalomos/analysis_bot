@@ -82,7 +82,7 @@ for key_exc in json_stock[f'list_{mode}']:
                 print(f'error: {e}')
                 continue
         else:
-            data_follow_time = load_data(namest, mode, key_exc, t)
+            data = load_data(namest, mode, key_exc, t)
 
         score = 0
         # first indicators
