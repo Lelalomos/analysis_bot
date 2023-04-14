@@ -10,5 +10,11 @@
         "len_data": [62, 93, 124],
         "long_indicators":["cross_ema", "cross_rsi", "macd_crossrsi"],
         "short_indicators":["cross_ema","cross_rsi", "macd_crossrsi"]
+    },
+    "crypto":{
+        "key":"",
+        "len_data": [62, 93, 124, 155, 365],
+        "long_indicators":["cross_ema", "cross_rsi", "ichimoku_cloud", "adxdi_crossrsi", "macd_crossrsi"],
+        "short_indicators":["cross_ema","cross_rsi","macd", "adxdi_crossrsi", "macd_crossrsi"]
     }
 }
