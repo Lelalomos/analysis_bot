@@ -87,7 +87,7 @@ def load_data(name, mode, exchange, time):
         loadd = pd.read_parquet(os.path.join(os.getcwd(),'data', mode, exchange ,f"{name}.parquet"))
         if int(loadd.shape[0]) == time or int(loadd.shape[0]) < time:
             return loadd
-        elif int(loadd.shape[0]) >= time:
+        elif int(loadd.shape[0]) > time:
             return loadd.iloc[time:,:]
         else:
             return []
