@@ -39,6 +39,6 @@
         "DAOL-FXALPHA-UI-A", "DAOL-FXALPHA-UI-D", "MUBOND-D"]
     },
     "list_crypto":{
-        "stable_coin":["ETHBUSD","BTCBUSD"]
+        "stable_coin":["ETHBUSD","BTCBUSD","BNBBUSD","XRPBUSD","DOGEBUSD","SOLBUSD","AVAXBUSD","ADABUSD"]
     }
 }
