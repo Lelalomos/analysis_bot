@@ -3,3 +3,4 @@ matplotlib
 scikit-learn
 pythainav
 pyarrow==11.0.0
+python-binance==1.0.15
