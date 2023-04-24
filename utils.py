@@ -46,7 +46,7 @@ def plot_save_img(green_line, red_line, namest):
 
 
 # timeout: _ssl.c:1112: The handshake operation timed out
-def get_data(tv, nav, exchange, name, n_bars, mode):
+def get_data(tv, nav, client, exchange, name, n_bars, mode, config):
     # prepare folder to store data
     os.makedirs(os.path.join(os.getcwd(),'data'),exist_ok=True)
     os.makedirs(os.path.join(os.getcwd(),'data',mode),exist_ok=True)
@@ -72,7 +72,24 @@ def get_data(tv, nav, exchange, name, n_bars, mode):
             print('[fund] error get data:',e)
             return []
     elif mode == "crypto":
-        pass
+        try:
+            # get date to request history data
+            current_date = datetime.now().date()
+            current_date = current_date.replace(year=current_date.year -1)
+            start_date = current_date.strftime('%d %b %Y')
+
+            request = client(api_key=config['api_key'], api_secret=config['api_secret'])
+            klines = request.get_historical_klines(name, "1d", start_date)
+            getd = pd.DataFrame(klines, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume', 'close_time', 'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume', 'taker_buy_quote_asset_volume', 'ignore'])
+            # convert date format
+            getd['timestamp'] = getd['timestamp'].apply(lambda x: (datetime.fromtimestamp(x / 1000)).strftime("%Y-%m-%d"))
+            # convert any type to date
+            getd['timestamp'] = pd.to_datetime(getd['timestamp'])
+            getd = getd.rename(columns = {'timestamp':'datetime'})
+            getd = getd.iloc[:,:6]
+        except Exception as e:
+            print('[crypto] error get data:',e)
+            return []
 
     # save data to parquet when data more than one
     if len(getd)>0:

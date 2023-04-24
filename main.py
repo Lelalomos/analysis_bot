@@ -3,12 +3,12 @@ from trade_algorithm import indicators
 from tvDatafeed import TvDatafeed
 import pandas as pd
 import os
-import json
 import datetime
 import numpy as np
 from sklearn import preprocessing
 import pythainav as nav
-from utils import get_data, load_data
+from binance.client import Client
+from utils import get_data, load_data, read_config
 
 pd.set_option('display.max_rows', 30)
 pd.set_option('display.max_columns', 30)
@@ -17,27 +17,19 @@ pd.set_option('display.width', 1000)
 tv = TvDatafeed(username=None,password=None)
 
 # list stock config
-with open(os.path.join(os.getcwd(),'config','list_stock','stock_config.json')) as f:
-    json_stock = json.load(f)
-
+json_stock = read_config(os.path.join(os.getcwd(),'config','list_stock','stock_config.json'))
 assert json_stock is not None, "error read stock config"
 
 # indicator config for long term
-with open(os.path.join(os.getcwd(),'config','indicator','long_indicator.json')) as f:
-    indicator_config_long = json.load(f)
-
+indicator_config_long = read_config(os.path.join(os.getcwd(),'config','indicator','long_indicator.json'))
 assert indicator_config_long is not None, "error read indicator config (long term)"
 
 # indicator config for short term
-with open(os.path.join(os.getcwd(),'config','indicator','short_indicator.json')) as f:
-    indicator_config_short = json.load(f)
-
+indicator_config_short = read_config(os.path.join(os.getcwd(),'config','indicator','short_indicator.json'))
 assert indicator_config_short is not None, "error read indicator config (short term)"
 
 # config
-with open(os.path.join(os.getcwd(),'config','config.json')) as f:
-    config = json.load(f)
-
+config = read_config(os.path.join(os.getcwd(),'config','config.json'))
 assert config is not None, "error read config"
 
 # find current date
@@ -71,7 +63,7 @@ for key_exc in json_stock[f'list_{mode}']:
     for namest in json_stock[f'list_{mode}'][key_exc]:
         if config['fetch_newdata'] == "on":
             try:
-                data = get_data(tv, nav, key_exc, namest, max_days, mode)
+                data = get_data(tv, nav, Client, key_exc, namest, max_days, mode, config[mode])
                 if len(data) == 0:
                     continue
             except Exception as e:
@@ -110,10 +102,10 @@ for key_exc in json_stock[f'list_{mode}']:
             df_current_value = data_follow_time.iloc[-2:-1,:]
             if t == 62:
                 dict_remaining_date[namest][f'{t}'] = remaining_date.days
-                dict_min_value_1[namest] = df_current_value['close'].values[0] - min(list(data_follow_time['close']))
+                dict_min_value_1[namest] = float(df_current_value['close'].values[0]) - float(min(list(data_follow_time['close'])))
             else:
                 dict_remaining_date[namest][f'{t}'] = remaining_date.days
-                dict_min_value_2[namest] = df_current_value['close'].values[0] - min(list(data_follow_time['close']))
+                dict_min_value_2[namest] = float(df_current_value['close'].values[0]) - float(min(list(data_follow_time['close'])))
             
     # sort data by current close value minus the smallest a value in the past
     dict_min_value_1_sort = dict(sorted(dict_min_value_1.items(), key=lambda item: item[1], reverse=True))
