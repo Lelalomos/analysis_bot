@@ -112,4 +112,20 @@ def load_data(name, mode, exchange, time):
         print('error load data from parquet file:',e)
         return []
 
+def convertday2int(text):
+    date = datetime.strptime(text, '%Y-%m-%d').date()
+    weekday = (date.weekday()) % 5
+    return weekday
+
+def preprocess_befor_fe(df, name, mode):
+    if mode == "stock":
+        df = df.rename(columns = {"datetime":"date","symbol":"tic"})
+        df['date'] = df['date'].dt.date.astype(str)
+        df['tic'] = f"{name}"
+        df['day'] = df['date'].apply(convertday2int)
+
+    return df
+
+    
+
         
