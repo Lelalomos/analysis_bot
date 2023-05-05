@@ -60,7 +60,7 @@ def get_data(tv, nav, client, exchange, name, n_bars, mode, config):
             getd = tv.get_hist(name, exchange, interval=Interval.in_daily, n_bars=n_bars)
             getd = getd.reset_index()
         except Exception as e:
-            print('[stock] error get data:',e)
+            print(f'[stock:{name}] error get data:',e)
             return []
     elif mode == "fund":
         try:
@@ -69,7 +69,7 @@ def get_data(tv, nav, client, exchange, name, n_bars, mode, config):
             # prepare data to same format with stock
             getd = getd.rename(columns = {'value':'close','updated':'datetime'})
         except Exception as e:
-            print('[fund] error get data:',e)
+            print(f'[fund:{name}] error get data:',e)
             return []
     elif mode == "crypto":
         try:
@@ -88,7 +88,7 @@ def get_data(tv, nav, client, exchange, name, n_bars, mode, config):
             getd = getd.rename(columns = {'timestamp':'datetime'})
             getd = getd.iloc[:,:6]
         except Exception as e:
-            print('[crypto] error get data:',e)
+            print(f'[crypto:{name}] error get data:',e)
             return []
 
     # save data to parquet when data more than one
