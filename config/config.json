@@ -2,7 +2,7 @@
     "mode": "stock",
     "fetch_newdata":"on",
     "stock":{
-        "len_data": [62, 93, 124, 155, 365],
+        "len_data": [32, 62, 93, 124, 155, 365],
         "long_indicators":["cross_ema", "cross_rsi", "ichimoku_cloud", "adxdi_crossrsi", "macd_crossrsi"],
         "short_indicators":["cross_ema","cross_rsi","macd", "adxdi_crossrsi", "macd_crossrsi"]
     },
