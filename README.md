@@ -17,3 +17,9 @@
     - len_data parameter is number of rows in data
 ###### config select stock name in config/list_stock/stock_config.json
     - currenly support fund, stock and cryptocurrency
+
+###### Example of Final Analysis Results
+###### SET
+![plot](./images/score_set.png)
+###### USA
+![plot](./images/score_usa.png)
