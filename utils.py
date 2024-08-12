@@ -2,7 +2,7 @@ import json
 import os
 import matplotlib.pyplot as plt
 from datetime import datetime
-from tvDatafeed import Interval
+from tvdatafeed import Interval
 import pandas as pd
 
 def read_config(path_json):

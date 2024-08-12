@@ -4,3 +4,9 @@ scikit-learn
 pythainav
 pyarrow==11.0.0
 python-binance==1.0.15
+ta-lib
+websocket-client
+pythainav
+python-binance
+pyarrow
+fastparquet
